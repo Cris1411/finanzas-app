@@ -258,42 +258,6 @@ export default function Configuracion() {
           </div>
         </div>
       )}
-
-      <div style={{
-        marginTop: '2rem',
-        padding: '1rem 1.25rem',
-        border: '1px solid var(--border)',
-        borderRadius: '14px',
-        background: 'linear-gradient(135deg, rgba(108,92,231,0.08), rgba(0,184,148,0.08))',
-        textAlign: 'center',
-        color: 'var(--text-muted)',
-        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.05)',
-      }}>
-        <div style={{
-          width: '42px',
-          height: '42px',
-          borderRadius: '50%',
-          margin: '0 auto 0.7rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'linear-gradient(135deg, var(--accent-purple), var(--accent-green))',
-          color: 'white',
-          fontWeight: 800,
-          fontSize: '0.95rem',
-        }}>
-          CRS
-        </div>
-        <div style={{ fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.3rem', fontSize: '1rem' }}>
-          Cristian R. Sanchez
-        </div>
-        <div style={{ fontSize: '0.92rem', lineHeight: 1.5 }}>
-          Desarrollador de Finanzas App · Hecho con dedicación para ayudarte a organizar tus finanzas
-        </div>
-        <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', opacity: 0.8 }}>
-          Versión 1.0 · Gestión financiera personal
-        </div>
-      </div>
     </div>
   );
 }

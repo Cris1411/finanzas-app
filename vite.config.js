@@ -9,15 +9,19 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'pwa-192x192-v2.svg', 'pwa-512x512-v2.svg'],
       manifest: {
+        // Un `id` único evita que el navegador asocie esta instalación
+        // con otra PWA ya instalada que comparta nombre/start_url.
         id: '/finanzas-app-v2',
-        name: 'Finanzas App',
-        short_name: 'FinanzasApp',
-        description: 'Controla tus ingresos, gastos y cuentas desde una sola app',
-        theme_color: '#121826',
-        background_color: '#121826',
+        name: 'FinanzasApp — Gestor Personal (v2)',
+        short_name: 'FinanzasApp v2',
+        description: 'Gestioná tus ingresos, gastos y cuentas bancarias',
+        theme_color: '#0f0f1a',
+        background_color: '#0f0f1a',
         display: 'standalone',
         orientation: 'portrait',
         scope: '/',
+        // `start_url` con query-string ayuda a diferenciar la instalación
+        // aunque se sirva desde la misma raíz.
         start_url: '/?app=finanzas-app-v2',
         icons: [
           {
@@ -37,9 +41,6 @@ export default defineConfig({
             purpose: 'any maskable',
           },
         ],
-      },
-      devOptions: {
-        enabled: true,
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],

@@ -62,6 +62,17 @@ function reducer(state, action) {
         ),
       };
       break;
+    case 'MOVER_CUENTA': {
+      const { id, direction } = action.payload;
+      const index = state.cuentas.findIndex(c => c.id === id);
+      if (index === -1) return state;
+      const target = direction === 'up' ? index - 1 : index + 1;
+      if (target < 0 || target >= state.cuentas.length) return state;
+      const cuentas = [...state.cuentas];
+      [cuentas[index], cuentas[target]] = [cuentas[target], cuentas[index]];
+      nuevo = { ...state, cuentas };
+      break;
+    }
 
     // TRANSACCIONES
     case 'AGREGAR_TRANSACCION': {

@@ -22,7 +22,7 @@ function getIconoTipo(tipo) {
   return Icono;
 }
 
-export default function TarjetaCuenta({ cuenta, onClick }) {
+export default function TarjetaCuenta({ cuenta, onClick, onMove, isPrimero, isUltimo }) {
   const { formatMonto, dispatch } = useFinanzas();
   const [menuOpen, setMenuOpen] = useState(false);
   const [editando, setEditando] = useState(false);
@@ -37,16 +37,24 @@ export default function TarjetaCuenta({ cuenta, onClick }) {
     e.stopPropagation();
     if (confirmando) {
       dispatch({ type: 'ELIMINAR_CUENTA', payload: cuenta.id });
+      setMenuOpen(false);
     } else {
       setConfirmando(true);
       setTimeout(() => setConfirmando(false), 3000);
     }
-    setMenuOpen(false);
+  };
+
+  const handleCardClick = () => {
+    if (onClick) {
+      onClick(cuenta);
+    } else {
+      setEditando(true);
+    }
   };
 
   return (
     <>
-      <div className="account-card animate-in" onClick={() => onClick?.(cuenta)}>
+      <div className="account-card animate-in" onClick={handleCardClick}>
         <div className="account-card-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <div
@@ -74,6 +82,22 @@ export default function TarjetaCuenta({ cuenta, onClick }) {
                 <button className="dropdown-item" onClick={() => { setEditando(true); setMenuOpen(false); }}>
                   <Pencil size={14} /> Editar
                 </button>
+                {onMove && !isPrimero && (
+                  <button
+                    className="dropdown-item"
+                    onClick={(e) => { e.stopPropagation(); onMove(cuenta.id, 'up'); setMenuOpen(false); }}
+                  >
+                    ▲ Mover arriba
+                  </button>
+                )}
+                {onMove && !isUltimo && (
+                  <button
+                    className="dropdown-item"
+                    onClick={(e) => { e.stopPropagation(); onMove(cuenta.id, 'down'); setMenuOpen(false); }}
+                  >
+                    ▼ Mover abajo
+                  </button>
+                )}
                 <button
                   className="dropdown-item danger"
                   onClick={handleEliminar}

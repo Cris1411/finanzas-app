@@ -6,7 +6,7 @@ import ModalCuenta from '../components/ModalCuenta';
 import { MONEDAS } from '../data/datosEjemplo';
 
 export default function Cuentas() {
-  const { cuentas, formatMonto, getSaldoTotal } = useFinanzas();
+  const { cuentas, formatMonto, getSaldoTotal, dispatch } = useFinanzas();
   const [modalNueva, setModalNueva] = useState(false);
   const [busqueda, setBusqueda] = useState('');
 
@@ -82,8 +82,14 @@ export default function Cuentas() {
         </div>
       ) : (
         <div className="grid-auto">
-          {cuentasFiltradas.map(cuenta => (
-            <TarjetaCuenta key={cuenta.id} cuenta={cuenta} />
+          {cuentasFiltradas.map((cuenta, idx) => (
+            <TarjetaCuenta
+              key={cuenta.id}
+              cuenta={cuenta}
+              isPrimero={idx === 0}
+              isUltimo={idx === cuentasFiltradas.length - 1}
+              onMove={(id, direction) => dispatch({ type: 'MOVER_CUENTA', payload: { id, direction } })}
+            />
           ))}
         </div>
       )}
