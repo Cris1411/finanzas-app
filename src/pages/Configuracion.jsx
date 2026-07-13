@@ -69,7 +69,7 @@ export default function Configuracion() {
       <div className="page-header">
         <div>
           <h1 className="page-title">Configuración</h1>
-          <p className="page-subtitle">Personalizá tu experiencia</p>
+          <p className="page-subtitle">Personalizá tu experiencia · Versión 1.0</p>
         </div>
       </div>
 
@@ -269,7 +269,7 @@ export default function Configuracion() {
             <Mail size={16} />
             <span>Contacto profesional</span>
           </div>
-          <div className="footer-note">Configuración ligera y accesible para tu app financiera</div>
+          <div className="footer-note">Primera versión 1.0 – configuración ligera y accesible</div>
         </div>
       </footer>
     </div>
