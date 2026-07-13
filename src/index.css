@@ -465,12 +465,24 @@ textarea.input { resize: vertical; min-height: 80px; }
   font-weight: 800;
   color: var(--text-primary);
   letter-spacing: -0.5px;
+  margin: 0;
 }
 
 .page-subtitle {
   font-size: 0.875rem;
   color: var(--text-secondary);
   margin-top: 0.2rem;
+  margin: 0;
+}
+
+/* Estilos para secciones con título y botón */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 /* ===================== GRID LAYOUTS ===================== */
@@ -1183,6 +1195,7 @@ textarea.input { resize: vertical; min-height: 80px; }
 
   .page-title {
     font-size: 1.35rem;
+    text-align: center;
   }
 
   .page-header {
@@ -1194,6 +1207,10 @@ textarea.input { resize: vertical; min-height: 80px; }
 
   .page-header > div:first-child {
     width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
   }
 
   .page-header > div:last-child,
@@ -1305,6 +1322,20 @@ textarea.input { resize: vertical; min-height: 80px; }
   .account-card {
     padding: 1rem;
   }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .section-header h3 {
+    width: 100%;
+  }
+
+  .section-header button {
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1318,15 +1349,21 @@ textarea.input { resize: vertical; min-height: 80px; }
 
   .page-title {
     font-size: 1.25rem;
+    text-align: center;
   }
 
   .page-subtitle {
     font-size: 0.8rem;
+    text-align: center;
   }
 
   .page-header {
     gap: 0.75rem;
     margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .page-header > div:first-child {
     text-align: center;
   }
 
@@ -1341,6 +1378,19 @@ textarea.input { resize: vertical; min-height: 80px; }
     padding: 0.45rem 0.6rem;
     font-size: 0.7rem;
     min-width: 75px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .section-header h3 {
+    width: 100%;
+  }
+
+  .section-header button {
+    width: 100%;
   }
 
   h1 { font-size: 1.5rem; }
@@ -1483,15 +1533,21 @@ textarea.input { resize: vertical; min-height: 80px; }
 
   .page-title {
     font-size: 1.1rem;
+    text-align: center;
   }
 
   .page-subtitle {
     font-size: 0.75rem;
+    text-align: center;
   }
 
   .page-header {
     gap: 0.65rem;
     margin-bottom: 0.85rem;
+    text-align: center;
+  }
+
+  .page-header > div:first-child {
     text-align: center;
   }
 
@@ -1506,6 +1562,23 @@ textarea.input { resize: vertical; min-height: 80px; }
     padding: 0.4rem 0.55rem;
     font-size: 0.65rem;
     min-width: 70px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .section-header h3 {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .section-header button {
+    width: 100%;
+    font-size: 0.65rem;
+    padding: 0.4rem 0.55rem;
   }
 
   .btn {

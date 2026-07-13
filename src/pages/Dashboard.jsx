@@ -164,7 +164,7 @@ export default function Dashboard({ onNavegar }) {
 
       {/* Cuentas rápidas */}
       <div className="card" style={{ marginBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <div className="section-header">
           <h3>Mis Cuentas</h3>
           <button className="btn btn-ghost btn-sm" onClick={() => onNavegar('cuentas')}>
             Ver todas <ArrowRight size={14} />
@@ -201,7 +201,7 @@ export default function Dashboard({ onNavegar }) {
 
       {/* Últimas transacciones */}
       <div className="card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <div className="section-header">
           <h3>Últimas Transacciones</h3>
           <button className="btn btn-ghost btn-sm" onClick={() => onNavegar('transacciones')}>
             Ver todas <ArrowRight size={14} />

@@ -169,7 +169,7 @@ export default function Configuracion() {
       {/* CATEGORÍAS */}
       {tab === 'categorias' && (
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <div className="section-header">
             <h3>Categorías ({categorias.length})</h3>
             <button className="btn btn-primary btn-sm" onClick={() => setModalCat('nueva')}>
               <Plus size={14} /> Nueva
