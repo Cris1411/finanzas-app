@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useFinanzas } from '../context/FinanzasContext';
 import {
   Moon, Sun, Download, Upload, Trash2, Plus, Pencil, X,
-  AlertTriangle, Check, RefreshCw, Globe
+  AlertTriangle, Check, RefreshCw, Globe, Mail
 } from 'lucide-react';
 import { MONEDAS } from '../data/datosEjemplo';
 
@@ -258,6 +258,20 @@ export default function Configuracion() {
           </div>
         </div>
       )}
+
+      <footer className="config-footer">
+        <div>
+          <span className="footer-label">Optimizado por</span>
+          <strong>Cristian R. Sanchez</strong>
+        </div>
+        <div className="footer-info">
+          <div className="footer-contact">
+            <Mail size={16} />
+            <span>Contacto profesional</span>
+          </div>
+          <div className="footer-note">Configuración ligera y accesible para tu app financiera</div>
+        </div>
+      </footer>
     </div>
   );
 }

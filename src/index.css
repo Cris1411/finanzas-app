@@ -785,6 +785,69 @@ textarea.input { resize: vertical; min-height: 80px; }
   color: var(--text-muted);
 }
 
+/* ===================== CONFIGURATION FOOTER ===================== */
+.config-footer {
+  margin-top: 2rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.04);
+  border-radius: 16px;
+}
+
+.config-footer .footer-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.config-footer strong {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.footer-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.footer-contact svg {
+  color: var(--accent-purple);
+}
+
+.config-footer .footer-note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+@media (min-width: 768px) {
+  .config-footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-info {
+    align-items: flex-end;
+    text-align: right;
+  }
+}
+
 .empty-state-icon {
   width: 64px;
   height: 64px;
