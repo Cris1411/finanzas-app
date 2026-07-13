@@ -611,31 +611,38 @@ textarea.input { resize: vertical; min-height: 80px; }
 }
 
 .tx-item-wrapper {
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   border-radius: 16px;
   overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .tx-item-wrapper:hover {
-  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.08));
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.08);
 }
 
 .tx-actions {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
   display: flex;
   gap: 0.35rem;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.2s ease;
+  margin-left: auto;
 }
 
 .tx-item-wrapper:hover .tx-actions {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(-50%) translateX(0);
+}
+
+@media (min-width: 1024px) {
+  .tx-actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .tx-action-btn {
@@ -645,10 +652,18 @@ textarea.input { resize: vertical; min-height: 80px; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.4rem;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.06);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   transition: all 0.2s ease;
+}
+
+.tx-action-label {
+  display: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .tx-action-btn:hover {
@@ -668,10 +683,23 @@ textarea.input { resize: vertical; min-height: 80px; }
   background: rgba(255, 118, 117, 0.14);
 }
 
+@media (min-width: 1024px) {
+  .tx-action-btn {
+    width: auto;
+    min-width: auto;
+    padding: 0.65rem 0.85rem;
+  }
+
+  .tx-action-label {
+    display: inline;
+  }
+}
+
 .tx-item {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex: 1;
   padding: 0.95rem 1rem;
   border-radius: 16px;
   background: var(--bg-card);

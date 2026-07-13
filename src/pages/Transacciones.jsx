@@ -154,6 +154,7 @@ export default function Transacciones() {
                   title="Editar transacción"
                 >
                   <Edit2 size={15} />
+                  <span className="tx-action-label">Editar</span>
                 </button>
                 <button
                   className="btn btn-ghost btn-icon btn-sm tx-action-btn delete"
@@ -165,6 +166,7 @@ export default function Transacciones() {
                   title="Eliminar transacción"
                 >
                   <Trash2 size={15} />
+                  <span className="tx-action-label">Eliminar</span>
                 </button>
               </div>
             </div>
