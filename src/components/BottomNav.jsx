@@ -28,8 +28,10 @@ export default function BottomNav({ paginaActual, onNavegar }) {
               key={id}
               className={`bottom-nav-item ${paginaActual === id ? 'active' : ''}`}
               onClick={() => onNavegar(id)}
+              aria-label={label}
+              aria-current={paginaActual === id ? 'page' : undefined}
             >
-              <Icon size={22} />
+              <Icon size={20} />
               <span>{label}</span>
             </button>
           ))}
@@ -38,8 +40,9 @@ export default function BottomNav({ paginaActual, onNavegar }) {
             className="bottom-nav-fab"
             onClick={() => setShowModal(true)}
             aria-label="Nueva transacción"
+            title="Nueva transacción"
           >
-            <Plus size={26} />
+            <Plus size={24} />
           </button>
 
           {navItemsRight.map(({ id, label, icon: Icon }) => (
@@ -47,8 +50,10 @@ export default function BottomNav({ paginaActual, onNavegar }) {
               key={id}
               className={`bottom-nav-item ${paginaActual === id ? 'active' : ''}`}
               onClick={() => onNavegar(id)}
+              aria-label={label}
+              aria-current={paginaActual === id ? 'page' : undefined}
             >
-              <Icon size={22} />
+              <Icon size={20} />
               <span>{label}</span>
             </button>
           ))}
@@ -61,3 +66,4 @@ export default function BottomNav({ paginaActual, onNavegar }) {
     </>
   );
 }
+

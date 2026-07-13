@@ -103,7 +103,7 @@ export default function Dashboard({ onNavegar }) {
       </div>
 
       {/* Gráfico + Cuentas */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '1.5rem', marginBottom: '1.5rem' }}>
+      <div className="dashboard-chart-grid">
 
         {/* Gráfico */}
         <div className="card">

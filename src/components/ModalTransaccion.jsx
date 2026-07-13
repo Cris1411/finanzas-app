@@ -92,12 +92,12 @@ export default function ModalTransaccion({ onClose, cuentaPreseleccionada = null
                 border: `1.5px solid ${color}`,
               } : {}}
             >
-              <Icon size={15} /> {label}
+              <Icon size={15} /> <span style={{ display: 'inline' }}>{label}</span>
             </button>
           ))}
         </div>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto', maxHeight: 'calc(80vh - 120px)' }}>
           {/* Monto */}
           <div className="input-group">
             <label className="input-label">Monto</label>
