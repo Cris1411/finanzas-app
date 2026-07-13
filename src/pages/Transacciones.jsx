@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { useFinanzas } from '../context/FinanzasContext';
-import { Plus, Search, Trash2, Filter, Download } from 'lucide-react';
+import { Plus, Search, Trash2, Edit2, Filter, Download } from 'lucide-react';
 import ItemTransaccion from '../components/ItemTransaccion';
 import ModalTransaccion from '../components/ModalTransaccion';
 
 export default function Transacciones() {
   const { transacciones, cuentas, categorias, dispatch, exportarCSV } = useFinanzas();
   const [modalTx, setModalTx] = useState(false);
+  const [editarTx, setEditarTx] = useState(null);
 
   const [filtros, setFiltros] = useState({
     busqueda: '',
@@ -40,6 +41,16 @@ export default function Transacciones() {
 
   const limpiarFiltros = () => setFiltros({ busqueda: '', tipo: '', cuentaId: '', categoriaId: '', mes: '' });
 
+  const abrirModal = (tx = null) => {
+    setEditarTx(tx);
+    setModalTx(true);
+  };
+
+  const cerrarModal = () => {
+    setModalTx(false);
+    setEditarTx(null);
+  };
+
   return (
     <div className="page-content">
       <div className="page-header">
@@ -51,7 +62,7 @@ export default function Transacciones() {
           <button className="btn btn-ghost" onClick={exportarCSV} title="Exportar CSV">
             <Download size={16} /> CSV
           </button>
-          <button className="btn btn-primary" onClick={() => setModalTx(true)}>
+          <button className="btn btn-primary" onClick={() => abrirModal()}>
             <Plus size={16} /> Nueva
           </button>
         </div>
@@ -134,32 +145,58 @@ export default function Transacciones() {
       ) : (
         <div className="tx-list">
           {txFiltradas.map(tx => (
-            <div key={tx.id} style={{ position: 'relative' }}>
+            <div
+              key={tx.id}
+              style={{ position: 'relative' }}
+              onMouseEnter={e => {
+                const actionBar = e.currentTarget.querySelector('.tx-actions');
+                if (actionBar) actionBar.style.opacity = '1';
+              }}
+              onMouseLeave={e => {
+                const actionBar = e.currentTarget.querySelector('.tx-actions');
+                if (actionBar) actionBar.style.opacity = '0';
+              }}
+            >
               <ItemTransaccion transaccion={tx} />
-              <button
-                className="btn btn-ghost btn-icon btn-sm"
-                onClick={() => dispatch({ type: 'ELIMINAR_TRANSACCION', payload: tx.id })}
+              <div
+                className="tx-actions"
                 style={{
                   position: 'absolute',
-                  right: '0.5rem',
+                  right: '0.75rem',
                   top: '50%',
                   transform: 'translateY(-50%)',
+                  display: 'flex',
+                  gap: '0.35rem',
                   opacity: 0,
                   transition: 'opacity 0.2s',
-                  color: 'var(--accent-red)',
                 }}
-                onMouseEnter={e => e.currentTarget.style.opacity = 1}
-                onMouseLeave={e => e.currentTarget.style.opacity = 0}
-                title="Eliminar transacción"
               >
-                <Trash2 size={15} />
-              </button>
+                <button
+                  className="btn btn-ghost btn-icon btn-sm"
+                  onClick={() => abrirModal(tx)}
+                  title="Editar transacción"
+                >
+                  <Edit2 size={15} />
+                </button>
+                <button
+                  className="btn btn-ghost btn-icon btn-sm"
+                  onClick={() => {
+                    if (window.confirm('¿Seguro que querés eliminar esta transacción?')) {
+                      dispatch({ type: 'ELIMINAR_TRANSACCION', payload: tx.id });
+                    }
+                  }}
+                  style={{ color: 'var(--accent-red)' }}
+                  title="Eliminar transacción"
+                >
+                  <Trash2 size={15} />
+                </button>
+              </div>
             </div>
           ))}
         </div>
       )}
 
-      {modalTx && <ModalTransaccion onClose={() => setModalTx(false)} />}
+      {modalTx && <ModalTransaccion transaccion={editarTx} onClose={cerrarModal} />}
     </div>
   );
 }

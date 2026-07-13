@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { useFinanzas } from '../context/FinanzasContext';
 import { X, ArrowUpCircle, ArrowDownCircle, ArrowLeftRight } from 'lucide-react';
 
-export default function ModalTransaccion({ onClose, cuentaPreseleccionada = null }) {
+export default function ModalTransaccion({ onClose, cuentaPreseleccionada = null, transaccion = null }) {
   const { cuentas, categorias, dispatch, monedaPrincipal } = useFinanzas();
 
-  const [tipo, setTipo] = useState('gasto');
+  const [tipo, setTipo] = useState(transaccion?.tipo || 'gasto');
   const [form, setForm] = useState({
-    monto: '',
-    cuentaId: cuentaPreseleccionada || (cuentas[0]?.id || ''),
-    cuentaDestinoId: '',
-    categoriaId: '',
-    descripcion: '',
-    fecha: new Date().toISOString().split('T')[0],
-    notas: '',
+    monto: transaccion?.monto?.toString() || '',
+    cuentaId: transaccion?.cuentaId || cuentaPreseleccionada || (cuentas[0]?.id || ''),
+    cuentaDestinoId: transaccion?.cuentaDestinoId || '',
+    categoriaId: transaccion?.categoriaId || '',
+    descripcion: transaccion?.descripcion || '',
+    fecha: transaccion ? new Date(transaccion.fecha).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+    notas: transaccion?.notas || '',
   });
   const [errors, setErrors] = useState({});
 
@@ -44,19 +44,22 @@ export default function ModalTransaccion({ onClose, cuentaPreseleccionada = null
 
     const cuentaOrigen = cuentas.find(c => c.id === form.cuentaId);
 
+    const payload = {
+      id: transaccion?.id,
+      tipo,
+      monto: Number(form.monto),
+      cuentaId: form.cuentaId,
+      cuentaDestinoId: tipo === 'transferencia' ? form.cuentaDestinoId : null,
+      categoriaId: tipo === 'transferencia' ? null : form.categoriaId,
+      descripcion: form.descripcion.trim(),
+      fecha: new Date(form.fecha + 'T12:00:00').toISOString(),
+      notas: form.notas,
+      moneda: cuentaOrigen?.moneda || 'ARS',
+    };
+
     dispatch({
-      type: 'AGREGAR_TRANSACCION',
-      payload: {
-        tipo,
-        monto: Number(form.monto),
-        cuentaId: form.cuentaId,
-        cuentaDestinoId: tipo === 'transferencia' ? form.cuentaDestinoId : null,
-        categoriaId: tipo === 'transferencia' ? null : form.categoriaId,
-        descripcion: form.descripcion.trim(),
-        fecha: new Date(form.fecha + 'T12:00:00').toISOString(),
-        notas: form.notas,
-        moneda: cuentaOrigen?.moneda || 'ARS',
-      },
+      type: transaccion ? 'EDITAR_TRANSACCION' : 'AGREGAR_TRANSACCION',
+      payload,
     });
     onClose();
   };
@@ -71,7 +74,7 @@ export default function ModalTransaccion({ onClose, cuentaPreseleccionada = null
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
-          <h2 className="modal-title">Nueva Transacción</h2>
+          <h2 className="modal-title">{transaccion ? 'Editar Transacción' : 'Nueva Transacción'}</h2>
           <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose}><X size={18} /></button>
         </div>
 
@@ -210,7 +213,7 @@ export default function ModalTransaccion({ onClose, cuentaPreseleccionada = null
                 color: 'white',
               }}
             >
-              Registrar {tipo === 'ingreso' ? 'Ingreso' : tipo === 'transferencia' ? 'Transferencia' : 'Gasto'}
+              {transaccion ? 'Guardar cambios' : `Registrar ${tipo === 'ingreso' ? 'Ingreso' : tipo === 'transferencia' ? 'Transferencia' : 'Gasto'}`} 
             </button>
           </div>
         </form>
