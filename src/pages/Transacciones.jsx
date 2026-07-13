@@ -145,47 +145,23 @@ export default function Transacciones() {
       ) : (
         <div className="tx-list">
           {txFiltradas.map(tx => (
-            <div
-              key={tx.id}
-              style={{ position: 'relative' }}
-              onMouseEnter={e => {
-                const actionBar = e.currentTarget.querySelector('.tx-actions');
-                if (actionBar) actionBar.style.opacity = '1';
-              }}
-              onMouseLeave={e => {
-                const actionBar = e.currentTarget.querySelector('.tx-actions');
-                if (actionBar) actionBar.style.opacity = '0';
-              }}
-            >
+            <div key={tx.id} className="tx-item-wrapper">
               <ItemTransaccion transaccion={tx} />
-              <div
-                className="tx-actions"
-                style={{
-                  position: 'absolute',
-                  right: '0.75rem',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  display: 'flex',
-                  gap: '0.35rem',
-                  opacity: 0,
-                  transition: 'opacity 0.2s',
-                }}
-              >
+              <div className="tx-actions">
                 <button
-                  className="btn btn-ghost btn-icon btn-sm"
+                  className="btn btn-ghost btn-icon btn-sm tx-action-btn edit"
                   onClick={() => abrirModal(tx)}
                   title="Editar transacción"
                 >
                   <Edit2 size={15} />
                 </button>
                 <button
-                  className="btn btn-ghost btn-icon btn-sm"
+                  className="btn btn-ghost btn-icon btn-sm tx-action-btn delete"
                   onClick={() => {
                     if (window.confirm('¿Seguro que querés eliminar esta transacción?')) {
                       dispatch({ type: 'ELIMINAR_TRANSACCION', payload: tx.id });
                     }
                   }}
-                  style={{ color: 'var(--accent-red)' }}
                   title="Eliminar transacción"
                 >
                   <Trash2 size={15} />
