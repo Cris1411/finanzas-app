@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { useFinanzas } from '../context/FinanzasContext';
-import { Plus, Search, Trash2, Edit2, Filter, Download } from 'lucide-react';
+import { Plus, Search, Trash2, ChevronDown, ChevronUp, Download } from 'lucide-react';
 import ItemTransaccion from '../components/ItemTransaccion';
 import ModalTransaccion from '../components/ModalTransaccion';
 
 export default function Transacciones() {
   const { transacciones, cuentas, categorias, dispatch, exportarCSV } = useFinanzas();
   const [modalTx, setModalTx] = useState(false);
-  const [editarTx, setEditarTx] = useState(null);
+  const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
 
   const [filtros, setFiltros] = useState({
     busqueda: '',
@@ -38,103 +38,111 @@ export default function Transacciones() {
   const totalGastos = txFiltradas.filter(t => t.tipo === 'gasto').reduce((s, t) => s + t.monto, 0);
 
   const hayFiltros = Object.values(filtros).some(v => v !== '');
-
   const limpiarFiltros = () => setFiltros({ busqueda: '', tipo: '', cuentaId: '', categoriaId: '', mes: '' });
-
-  const abrirModal = (tx = null) => {
-    setEditarTx(tx);
-    setModalTx(true);
-  };
-
-  const cerrarModal = () => {
-    setModalTx(false);
-    setEditarTx(null);
-  };
 
   return (
     <div className="page-content">
+      {/* Header */}
       <div className="page-header">
         <div>
           <h1 className="page-title">Transacciones</h1>
           <p className="page-subtitle">{txFiltradas.length} movimiento{txFiltradas.length !== 1 ? 's' : ''}</p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        {/* Grupo de botones en mobile */}
+        <div className="btn-group" style={{ display: 'flex', gap: '0.5rem' }}>
           <button className="btn btn-ghost" onClick={exportarCSV} title="Exportar CSV">
             <Download size={16} /> CSV
           </button>
-          <button className="btn btn-primary" onClick={() => abrirModal()}>
+          <button className="btn btn-primary" onClick={() => setModalTx(true)}>
             <Plus size={16} /> Nueva
           </button>
         </div>
       </div>
 
-      {/* Mini resumen */}
-      <div className="grid-2 md-2" style={{ marginBottom: '1.25rem' }}>
-        <div className="stat-card green" style={{ padding: '1rem' }}>
-          <div className="stat-label">Ingresos filtrados</div>
-          <div className="stat-value positive" style={{ fontSize: '1.3rem' }}>
-            +{totalIngresos.toLocaleString('es-AR')}
-          </div>
+      {/* Mini resumen — siempre 2 cols */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem', marginBottom: '1rem' }}>
+        <div className="stat-card green" style={{ padding: '0.875rem 1rem' }}>
+          <div className="stat-label">Ingresos</div>
+          <div className="stat-value positive">+{totalIngresos.toLocaleString('es-AR')}</div>
         </div>
-        <div className="stat-card red" style={{ padding: '1rem' }}>
-          <div className="stat-label">Gastos filtrados</div>
-          <div className="stat-value negative" style={{ fontSize: '1.3rem' }}>
-            -{totalGastos.toLocaleString('es-AR')}
-          </div>
+        <div className="stat-card red" style={{ padding: '0.875rem 1rem' }}>
+          <div className="stat-label">Gastos</div>
+          <div className="stat-value negative">-{totalGastos.toLocaleString('es-AR')}</div>
         </div>
       </div>
 
-      {/* Filtros */}
-      <div className="filtros-bar">
-        <div style={{ position: 'relative', flex: '1 1 200px', minWidth: 150 }}>
-          <Search size={14} style={{ position: 'absolute', left: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-          <input
-            className="input"
-            style={{ paddingLeft: '2rem' }}
-            placeholder="Buscar..."
-            value={filtros.busqueda}
-            onChange={e => setFiltro('busqueda', e.target.value)}
-          />
-        </div>
-
-        <select className="input" value={filtros.tipo} onChange={e => setFiltro('tipo', e.target.value)}>
-          <option value="">Todos los tipos</option>
-          <option value="ingreso">Ingresos</option>
-          <option value="gasto">Gastos</option>
-          <option value="transferencia">Transferencias</option>
-        </select>
-
-        <select className="input" value={filtros.cuentaId} onChange={e => setFiltro('cuentaId', e.target.value)}>
-          <option value="">Todas las cuentas</option>
-          {cuentas.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
-        </select>
-
-        <select className="input" value={filtros.categoriaId} onChange={e => setFiltro('categoriaId', e.target.value)}>
-          <option value="">Todas las categorías</option>
-          {categorias.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
-        </select>
-
+      {/* Búsqueda rápida siempre visible */}
+      <div style={{ position: 'relative', marginBottom: '0.625rem' }}>
+        <Search size={15} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
         <input
           className="input"
-          type="month"
-          value={filtros.mes}
-          onChange={e => setFiltro('mes', e.target.value)}
+          style={{ paddingLeft: '2.4rem', paddingRight: filtros.busqueda ? '2.4rem' : '1rem' }}
+          placeholder="Buscar transacciones..."
+          value={filtros.busqueda}
+          onChange={e => setFiltro('busqueda', e.target.value)}
         />
-
-        {hayFiltros && (
-          <button className="btn btn-ghost btn-sm" onClick={limpiarFiltros}>
-            <Filter size={14} /> Limpiar
+        {filtros.busqueda && (
+          <button
+            onClick={() => setFiltro('busqueda', '')}
+            style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '0.25rem' }}
+          >
+            ✕
           </button>
         )}
       </div>
 
-      {/* Lista */}
+      {/* Botón para mostrar/ocultar filtros avanzados */}
+      <button
+        className="btn btn-ghost btn-sm"
+        style={{ width: '100%', marginBottom: '0.75rem', justifyContent: 'space-between' }}
+        onClick={() => setFiltrosAbiertos(!filtrosAbiertos)}
+      >
+        <span>Filtros avanzados {hayFiltros && `(${Object.values(filtros).filter(v => v && v !== filtros.busqueda).length} activos)`}</span>
+        {filtrosAbiertos ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+      </button>
+
+      {/* Panel filtros avanzados */}
+      {filtrosAbiertos && (
+        <div className="filtros-bar" style={{ marginBottom: '1rem' }}>
+          <select className="input" value={filtros.tipo} onChange={e => setFiltro('tipo', e.target.value)}>
+            <option value="">Todos los tipos</option>
+            <option value="ingreso">✅ Ingresos</option>
+            <option value="gasto">❌ Gastos</option>
+            <option value="transferencia">🔄 Transferencias</option>
+          </select>
+
+          <select className="input" value={filtros.cuentaId} onChange={e => setFiltro('cuentaId', e.target.value)}>
+            <option value="">Todas las cuentas</option>
+            {cuentas.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
+          </select>
+
+          <select className="input" value={filtros.categoriaId} onChange={e => setFiltro('categoriaId', e.target.value)}>
+            <option value="">Todas las categorías</option>
+            {categorias.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
+          </select>
+
+          <input
+            className="input"
+            type="month"
+            value={filtros.mes}
+            onChange={e => setFiltro('mes', e.target.value)}
+          />
+
+          {hayFiltros && (
+            <button className="btn btn-danger btn-sm" onClick={limpiarFiltros}>
+              Limpiar filtros
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Lista de transacciones */}
       {txFiltradas.length === 0 ? (
-        <div className="empty-state card">
+        <div className="card empty-state">
           <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📂</div>
           <h3>Sin transacciones</h3>
           <p style={{ marginBottom: '1rem' }}>
-            {hayFiltros ? 'Ningún movimiento coincide con los filtros' : 'Registrá tu primer movimiento financiero'}
+            {hayFiltros ? 'Ningún movimiento coincide con los filtros' : 'Registrá tu primer movimiento'}
           </p>
           {!hayFiltros && (
             <button className="btn btn-primary btn-sm" onClick={() => setModalTx(true)}>
@@ -145,36 +153,41 @@ export default function Transacciones() {
       ) : (
         <div className="tx-list">
           {txFiltradas.map(tx => (
-            <div key={tx.id} className="tx-item-wrapper">
+            <div key={tx.id} style={{ position: 'relative' }}>
               <ItemTransaccion transaccion={tx} />
-              <div className="tx-actions">
-                <button
-                  className="btn btn-ghost btn-icon btn-sm tx-action-btn edit"
-                  onClick={() => abrirModal(tx)}
-                  title="Editar transacción"
-                >
-                  <Edit2 size={15} />
-                  <span className="tx-action-label">Editar</span>
-                </button>
-                <button
-                  className="btn btn-ghost btn-icon btn-sm tx-action-btn delete"
-                  onClick={() => {
-                    if (window.confirm('¿Seguro que querés eliminar esta transacción?')) {
-                      dispatch({ type: 'ELIMINAR_TRANSACCION', payload: tx.id });
-                    }
-                  }}
-                  title="Eliminar transacción"
-                >
-                  <Trash2 size={15} />
-                  <span className="tx-action-label">Eliminar</span>
-                </button>
-              </div>
+              {/* Botón eliminar — swipe-friendly en mobile */}
+              <button
+                className="btn btn-ghost btn-icon btn-sm"
+                onClick={() => {
+                  if (window.confirm('¿Eliminar esta transacción?')) {
+                    dispatch({ type: 'ELIMINAR_TRANSACCION', payload: tx.id });
+                  }
+                }}
+                style={{
+                  position: 'absolute',
+                  right: '0.25rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: 'var(--accent-red)',
+                  opacity: 0.4,
+                  minHeight: '44px',
+                  minWidth: '44px',
+                }}
+                onMouseEnter={e => e.currentTarget.style.opacity = 1}
+                onMouseLeave={e => e.currentTarget.style.opacity = 0.4}
+                onFocus={e => e.currentTarget.style.opacity = 1}
+                onBlur={e => e.currentTarget.style.opacity = 0.4}
+                title="Eliminar transacción"
+                aria-label="Eliminar transacción"
+              >
+                <Trash2 size={15} />
+              </button>
             </div>
           ))}
         </div>
       )}
 
-      {modalTx && <ModalTransaccion transaccion={editarTx} onClose={cerrarModal} />}
+      {modalTx && <ModalTransaccion onClose={() => setModalTx(false)} />}
     </div>
   );
 }

@@ -128,8 +128,6 @@ h4 { font-size: 1rem; }
   padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
 }
 
 /* ===================== SIDEBAR ===================== */
@@ -240,6 +238,11 @@ h4 { font-size: 1rem; }
 .sidebar-footer {
   padding: 1rem 0.75rem;
   border-top: 1px solid var(--border);
+}
+
+/* ---- Mobile topbar (hidden on desktop) ---- */
+.mobile-topbar {
+  display: none;
 }
 
 /* ===================== CARDS ===================== */
@@ -465,24 +468,12 @@ textarea.input { resize: vertical; min-height: 80px; }
   font-weight: 800;
   color: var(--text-primary);
   letter-spacing: -0.5px;
-  margin: 0;
 }
 
 .page-subtitle {
   font-size: 0.875rem;
   color: var(--text-secondary);
   margin-top: 0.2rem;
-  margin: 0;
-}
-
-/* Estilos para secciones con título y botón */
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-  gap: 0.75rem;
 }
 
 /* ===================== GRID LAYOUTS ===================== */
@@ -490,14 +481,6 @@ textarea.input { resize: vertical; min-height: 80px; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
 .grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
-
-/* Dashboard grid responsivo */
-.dashboard-chart-grid {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
 
 /* ===================== STAT CARDS ===================== */
 .stat-card {
@@ -629,104 +612,18 @@ textarea.input { resize: vertical; min-height: 80px; }
 .tx-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-}
-
-.tx-item-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  border-radius: 16px;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.tx-item-wrapper:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.08);
-}
-
-.tx-actions {
-  display: flex;
-  gap: 0.35rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  margin-left: auto;
-}
-
-.tx-item-wrapper:hover .tx-actions {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-@media (min-width: 1024px) {
-  .tx-actions {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-.tx-action-btn {
-  width: 2.3rem;
-  height: 2.3rem;
-  min-width: 2.3rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  transition: all 0.2s ease;
-}
-
-.tx-action-label {
-  display: none;
-  font-size: 0.75rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.tx-action-btn:hover {
-  background: rgba(108, 92, 231, 0.12);
-  transform: translateY(-1px);
-}
-
-.tx-action-btn.edit {
-  color: var(--accent-purple);
-}
-
-.tx-action-btn.delete {
-  color: var(--accent-red);
-}
-
-.tx-action-btn.delete:hover {
-  background: rgba(255, 118, 117, 0.14);
-}
-
-@media (min-width: 1024px) {
-  .tx-action-btn {
-    width: auto;
-    min-width: auto;
-    padding: 0.65rem 0.85rem;
-  }
-
-  .tx-action-label {
-    display: inline;
-  }
+  gap: 0.5rem;
 }
 
 .tx-item {
   display: flex;
   align-items: center;
   gap: 1rem;
-  flex: 1;
-  padding: 0.95rem 1rem;
-  border-radius: 16px;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .tx-item:hover {
@@ -805,69 +702,6 @@ textarea.input { resize: vertical; min-height: 80px; }
   text-align: center;
   padding: 3rem 1rem;
   color: var(--text-muted);
-}
-
-/* ===================== CONFIGURATION FOOTER ===================== */
-.config-footer {
-  margin-top: 2rem;
-  padding: 1rem 1.25rem;
-  border-top: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  color: var(--text-secondary);
-  background: rgba(255,255,255,0.04);
-  border-radius: 16px;
-}
-
-.config-footer .footer-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-muted);
-}
-
-.config-footer strong {
-  display: block;
-  margin-top: 0.15rem;
-  color: var(--text-primary);
-  font-size: 0.95rem;
-}
-
-.footer-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  text-align: left;
-}
-
-.footer-contact {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.footer-contact svg {
-  color: var(--accent-purple);
-}
-
-.config-footer .footer-note {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-@media (min-width: 768px) {
-  .config-footer {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .footer-info {
-    align-items: flex-end;
-    text-align: right;
-  }
 }
 
 .empty-state-icon {
@@ -1160,6 +994,9 @@ textarea.input { resize: vertical; min-height: 80px; }
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
+    width: 280px;
+    z-index: 300;
+    box-shadow: var(--shadow-lg);
   }
 
   .sidebar.open {
@@ -1168,445 +1005,223 @@ textarea.input { resize: vertical; min-height: 80px; }
 
   .main-content {
     margin-left: 0;
-    padding-bottom: 90px;
+    padding-bottom: 72px;
   }
 
   .page-content {
-    padding: 1.25rem 1rem;
-    gap: 1rem;
+    padding: 0.875rem;
+    padding-top: 4rem; /* espacio para el header mobile */
+  }
+
+  /* ---- Header mobile flotante ---- */
+  .mobile-topbar {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: var(--bg-sidebar);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+    height: 56px;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 
   .bottom-nav {
     display: block;
   }
 
+  /* ---- Grids ---- */
   .grid-2, .grid-3, .grid-4 {
-    grid-template-columns: 1fr;
-  }
-
-  .grid-2.md-2 {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.625rem;
   }
 
-  .dashboard-chart-grid {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
+  .grid-single-mobile {
+    grid-template-columns: 1fr !important;
   }
 
-  .page-title {
-    font-size: 1.35rem;
-    text-align: center;
-  }
-
+  /* ---- Page header ---- */
   .page-header {
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 1rem;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
   }
 
-  .page-header > div:first-child {
+  .page-header .btn {
     width: 100%;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .page-header > div:last-child,
-  .page-header > button {
-    width: 100%;
-    display: flex;
-    gap: 0.5rem;
     justify-content: center;
-  }
-
-  .page-header > div:last-child button,
-  .page-header > button {
-    flex: 1;
-    min-width: 80px;
-    font-size: 0.75rem;
-    padding: 0.5rem 0.75rem;
-  }
-
-  .stat-value {
-    font-size: 1.3rem;
-  }
-
-  .filtros-bar {
-    flex-wrap: wrap;
-    padding: 0.75rem;
-    gap: 0.5rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .filtros-bar .input {
-    min-width: 120px;
-    padding: 0.5rem 0.65rem;
-    font-size: 0.75rem;
-    flex-shrink: 0;
-  }
-
-  .filtros-bar button {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.75rem;
-    flex-shrink: 0;
-  }
-
-  .card {
-    border-radius: 12px;
-    padding: 1rem;
-  }
-
-  .btn {
-    padding: 0.55rem 1rem;
-    font-size: 0.85rem;
-  }
-
-  .btn-icon {
-    width: 36px;
-    height: 36px;
-    padding: 0.35rem;
-  }
-
-  .modal {
-    padding: 1.25rem;
-    border-radius: 16px;
-    max-height: 85vh;
-  }
-
-  .account-balance {
-    font-size: 1.25rem;
-  }
-
-  .tx-item {
-    padding: 0.85rem;
-  }
-
-  .tx-desc {
-    font-size: 0.8rem;
-  }
-
-  .tx-meta {
-    font-size: 0.7rem;
-  }
-
-  .tx-amount {
+    padding: 0.75rem 1rem;
     font-size: 0.9rem;
   }
 
-  .input {
-    padding: 0.65rem 0.9rem;
-    font-size: 0.85rem;
-  }
-
-  .bottom-nav-fab {
-    width: 56px;
-    height: 56px;
-  }
-
-  .bottom-nav-item {
-    min-width: 48px;
-    padding: 0.3rem 0.5rem;
-  }
-
-  .empty-state {
-    padding: 2rem 1rem;
-  }
-
-  .stat-card {
-    padding: 1rem;
-  }
-
-  .account-card {
-    padding: 1rem;
-  }
-
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
+  .page-header .btn-group {
+    display: flex;
     gap: 0.5rem;
-  }
-
-  .section-header h3 {
     width: 100%;
   }
 
-  .section-header button {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .page-content {
-    padding: 1rem 0.75rem;
-  }
-
-  .main-content {
-    padding-bottom: 85px;
+  .page-header .btn-group .btn {
+    flex: 1;
   }
 
   .page-title {
-    font-size: 1.25rem;
-    text-align: center;
+    font-size: 1.3rem;
   }
 
-  .page-subtitle {
-    font-size: 0.8rem;
-    text-align: center;
+  /* ---- Stat cards ---- */
+  .stat-card {
+    padding: 1rem 1rem;
   }
-
-  .page-header {
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-    text-align: center;
-  }
-
-  .page-header > div:first-child {
-    text-align: center;
-  }
-
-  .page-header > div:last-child,
-  .page-header > button {
-    gap: 0.4rem;
-    justify-content: center;
-  }
-
-  .page-header > div:last-child button,
-  .page-header > button {
-    padding: 0.45rem 0.6rem;
-    font-size: 0.7rem;
-    min-width: 75px;
-  }
-
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .section-header h3 {
-    width: 100%;
-  }
-
-  .section-header button {
-    width: 100%;
-  }
-
-  h1 { font-size: 1.5rem; }
-  h2 { font-size: 1.25rem; }
-  h3 { font-size: 1rem; }
 
   .stat-value {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    letter-spacing: -0.5px;
   }
 
   .stat-label {
     font-size: 0.7rem;
   }
 
+  /* ---- Cards ---- */
   .card {
-    border-radius: 10px;
-    padding: 0.85rem;
-  }
-
-  .modal {
     padding: 1rem;
-    border-radius: 12px;
-    max-height: 90vh;
+    border-radius: 14px;
   }
 
-  .modal-title {
-    font-size: 1rem;
+  /* ---- Account card ---- */
+  .account-card {
+    padding: 1rem;
   }
 
-  .modal-footer {
-    flex-direction: column-reverse;
-    gap: 0.5rem;
+  .account-balance {
+    font-size: 1.3rem;
   }
 
-  .modal-footer button {
-    width: 100%;
-  }
-
-  .btn {
-    padding: 0.5rem 0.85rem;
-    font-size: 0.8rem;
-    border-radius: 10px;
-  }
-
-  .btn-sm {
-    padding: 0.35rem 0.65rem;
-    font-size: 0.75rem;
-  }
-
-  .input {
-    padding: 0.6rem 0.8rem;
-    font-size: 0.8rem;
-    border-radius: 8px;
-  }
-
-  .input-label {
-    font-size: 0.7rem;
-  }
-
+  /* ---- Transactions ---- */
   .tx-item {
     padding: 0.75rem;
-    gap: 0.65rem;
+    gap: 0.75rem;
   }
 
   .tx-icon {
     width: 36px;
     height: 36px;
-  }
-
-  .tx-desc {
-    font-size: 0.75rem;
-  }
-
-  .tx-meta {
-    font-size: 0.65rem;
+    flex-shrink: 0;
   }
 
   .tx-amount {
-    font-size: 0.85rem;
+    font-size: 0.875rem;
   }
 
-  .bottom-nav-item {
+  .tx-desc {
+    font-size: 0.825rem;
+  }
+
+  .tx-meta {
+    font-size: 0.7rem;
+  }
+
+  /* ---- Filtros ---- */
+  .filtros-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .filtros-bar .input {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .filtros-bar .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ---- Modal ---- */
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal {
+    border-radius: 20px 20px 0 0;
+    max-height: 92vh;
+    padding: 1.25rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* ---- Botones táctiles mínimo 44px ---- */
+  .btn {
+    min-height: 44px;
+  }
+
+  .btn-sm {
+    min-height: 38px;
+    padding: 0.45rem 0.85rem;
+  }
+
+  .btn-icon {
+    min-height: 44px;
     min-width: 44px;
-    padding: 0.25rem 0.5rem;
+    padding: 0;
+  }
+
+  /* ---- Grid selector tipo transacción ---- */
+  .tipo-selector {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* ---- Grid-2 para inputs de formulario ---- */
+  .grid-2.form-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-content {
+    padding: 0.75rem;
+    padding-top: 4rem;
+  }
+
+  .account-balance {
+    font-size: 1.15rem;
+  }
+
+  .modal {
+    padding: 1rem;
+  }
+
+  /* Stats en 2 columnas, no 1 */
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-value {
+    font-size: 1.05rem;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+  }
+
+  /* Bottom nav más compacto */
+  .bottom-nav-item {
+    padding: 0.3rem 0.4rem;
+    min-width: 44px;
   }
 
   .bottom-nav-item span {
     font-size: 0.6rem;
   }
-
-  .bottom-nav-fab {
-    width: 52px;
-    height: 52px;
-  }
-
-  .filtros-bar {
-    padding: 0.65rem;
-    gap: 0.4rem;
-  }
-
-  .filtros-bar .input {
-    min-width: 110px;
-    padding: 0.45rem 0.6rem;
-    font-size: 0.7rem;
-  }
-
-  .empty-state {
-    padding: 1.5rem 1rem;
-  }
-
-  .grid-2.md-2 {
-    grid-template-columns: 1fr;
-  }
-
-  .account-card {
-    padding: 0.9rem;
-  }
-
-  .account-name {
-    font-size: 0.8rem;
-  }
-
-  .account-type {
-    font-size: 0.7rem;
-  }
-
-  .account-balance {
-    font-size: 1.1rem;
-  }
-
-  .account-moneda {
-    font-size: 0.7rem;
-  }
 }
 
-@media (max-width: 360px) {
-  .page-content {
-    padding: 0.75rem;
-  }
-
-  .page-title {
-    font-size: 1.1rem;
-    text-align: center;
-  }
-
-  .page-subtitle {
-    font-size: 0.75rem;
-    text-align: center;
-  }
-
-  .page-header {
-    gap: 0.65rem;
-    margin-bottom: 0.85rem;
-    text-align: center;
-  }
-
-  .page-header > div:first-child {
-    text-align: center;
-  }
-
-  .page-header > div:last-child,
-  .page-header > button {
-    gap: 0.35rem;
-    justify-content: center;
-  }
-
-  .page-header > div:last-child button,
-  .page-header > button {
-    padding: 0.4rem 0.55rem;
-    font-size: 0.65rem;
-    min-width: 70px;
-  }
-
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .section-header h3 {
-    width: 100%;
-    font-size: 1rem;
-  }
-
-  .section-header button {
-    width: 100%;
-    font-size: 0.65rem;
-    padding: 0.4rem 0.55rem;
-  }
-
-  .btn {
-    padding: 0.45rem 0.75rem;
-    font-size: 0.75rem;
-  }
-
-  .input {
-    padding: 0.55rem 0.7rem;
-    font-size: 0.75rem;
-  }
-
-  .tx-desc {
-    font-size: 0.7rem;
-  }
-
-  .modal {
-    padding: 0.9rem;
-    max-height: 92vh;
-  }
-
-  .filtros-bar {
-    padding: 0.5rem;
-  }
-
-  .filtros-bar .input {
-    min-width: 100px;
-    padding: 0.4rem 0.5rem;
-    font-size: 0.65rem;
-  }
-}

@@ -13,6 +13,14 @@ const NAV_ITEMS = [
   { id: 'configuracion', label: 'Configuración', icon: Settings },
 ];
 
+const LABELS_PAGINA = {
+  dashboard: 'Dashboard',
+  cuentas: 'Cuentas',
+  transacciones: 'Transacciones',
+  estadisticas: 'Estadísticas',
+  configuracion: 'Configuración',
+};
+
 export default function Sidebar({ paginaActual, onNavegar }) {
   const { tema, dispatch } = useFinanzas();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -28,55 +36,76 @@ export default function Sidebar({ paginaActual, onNavegar }) {
 
   return (
     <>
-      {/* Botón hamburguesa (mobile) */}
-      <button
-        className="btn btn-ghost btn-icon"
-        onClick={() => setMobileOpen(true)}
-        style={{
-          position: 'fixed',
-          top: '1rem',
-          left: '1rem',
-          zIndex: 200,
-          display: 'none',
-        }}
-        id="sidebar-toggle"
-        aria-label="Abrir menú"
-      >
-        <Menu size={22} />
-      </button>
+      {/* ===== TOPBAR MOBILE ===== */}
+      <header className="mobile-topbar">
+        <button
+          className="btn btn-ghost btn-icon"
+          onClick={() => setMobileOpen(true)}
+          aria-label="Abrir menú"
+          style={{ marginLeft: '-0.25rem' }}
+        >
+          <Menu size={22} />
+        </button>
 
-      {/* Overlay mobile */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{
+            width: 28, height: 28, borderRadius: 8,
+            background: 'linear-gradient(135deg, var(--accent-purple), var(--accent-purple-light))',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <TrendingUp size={15} color="white" />
+          </div>
+          <span style={{ fontWeight: 800, fontSize: '1rem', letterSpacing: '-0.3px' }}>
+            {LABELS_PAGINA[paginaActual] || 'FinanzasApp'}
+          </span>
+        </div>
+
+        <button
+          className="btn btn-ghost btn-icon"
+          onClick={toggleTema}
+          aria-label="Cambiar tema"
+          style={{ marginRight: '-0.25rem' }}
+        >
+          {tema === 'oscuro' ? <Sun size={19} /> : <Moon size={19} />}
+        </button>
+      </header>
+
+      {/* ===== OVERLAY MOBILE ===== */}
       {mobileOpen && (
         <div
           style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            zIndex: 99,
-            display: 'block',
+            position: 'fixed', inset: 0,
+            background: 'rgba(0,0,0,0.55)',
+            zIndex: 299,
+            backdropFilter: 'blur(2px)',
           }}
           onClick={() => setMobileOpen(false)}
         />
       )}
 
+      {/* ===== SIDEBAR ===== */}
       <aside className={`sidebar ${mobileOpen ? 'open' : ''}`}>
         {/* Logo */}
-        <div className="sidebar-logo" style={{ cursor: 'pointer' }} onClick={() => navegar('dashboard')}>
+        <div
+          className="sidebar-logo"
+          style={{ cursor: 'pointer' }}
+          onClick={() => navegar('dashboard')}
+        >
           <div className="sidebar-logo-icon">
             <TrendingUp size={22} />
           </div>
           <div className="sidebar-logo-text">
             Finanzas<span>App</span>
           </div>
-          {mobileOpen && (
-            <button
-              className="btn btn-ghost btn-icon btn-sm"
-              onClick={(e) => { e.stopPropagation(); setMobileOpen(false); }}
-              style={{ marginLeft: 'auto' }}
-            >
-              <X size={18} />
-            </button>
-          )}
+          {/* Cerrar en mobile */}
+          <button
+            className="btn btn-ghost btn-icon btn-sm"
+            onClick={(e) => { e.stopPropagation(); setMobileOpen(false); }}
+            style={{ marginLeft: 'auto' }}
+            aria-label="Cerrar menú"
+          >
+            <X size={18} />
+          </button>
         </div>
 
         {/* Navegación */}
@@ -106,17 +135,13 @@ export default function Sidebar({ paginaActual, onNavegar }) {
         {/* Footer */}
         <div className="sidebar-footer">
           <button className="nav-item btn-block" onClick={toggleTema}>
-            {tema === 'oscuro' ? <Sun className="nav-icon" size={18} /> : <Moon className="nav-icon" size={18} />}
+            {tema === 'oscuro'
+              ? <Sun className="nav-icon" size={18} />
+              : <Moon className="nav-icon" size={18} />}
             {tema === 'oscuro' ? 'Modo Claro' : 'Modo Oscuro'}
           </button>
         </div>
       </aside>
-
-      <style>{`
-        @media (max-width: 768px) {
-          #sidebar-toggle { display: flex !important; }
-        }
-      `}</style>
     </>
   );
 }

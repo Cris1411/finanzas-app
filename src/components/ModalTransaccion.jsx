@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { useFinanzas } from '../context/FinanzasContext';
 import { X, ArrowUpCircle, ArrowDownCircle, ArrowLeftRight } from 'lucide-react';
 
-export default function ModalTransaccion({ onClose, cuentaPreseleccionada = null, transaccion = null }) {
-  const { cuentas, categorias, dispatch, monedaPrincipal } = useFinanzas();
+export default function ModalTransaccion({ onClose, cuentaPreseleccionada = null }) {
+  const { cuentas, categorias, dispatch } = useFinanzas();
 
-  const [tipo, setTipo] = useState(transaccion?.tipo || 'gasto');
+  const [tipo, setTipo] = useState('gasto');
   const [form, setForm] = useState({
-    monto: transaccion?.monto?.toString() || '',
-    cuentaId: transaccion?.cuentaId || cuentaPreseleccionada || (cuentas[0]?.id || ''),
-    cuentaDestinoId: transaccion?.cuentaDestinoId || '',
-    categoriaId: transaccion?.categoriaId || '',
-    descripcion: transaccion?.descripcion || '',
-    fecha: transaccion ? new Date(transaccion.fecha).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-    notas: transaccion?.notas || '',
+    monto: '',
+    cuentaId: cuentaPreseleccionada || (cuentas[0]?.id || ''),
+    cuentaDestinoId: '',
+    categoriaId: '',
+    descripcion: '',
+    fecha: new Date().toISOString().split('T')[0],
+    notas: '',
   });
   const [errors, setErrors] = useState({});
 
@@ -43,139 +43,164 @@ export default function ModalTransaccion({ onClose, cuentaPreseleccionada = null
     if (Object.keys(errs).length) { setErrors(errs); return; }
 
     const cuentaOrigen = cuentas.find(c => c.id === form.cuentaId);
-
-    const payload = {
-      id: transaccion?.id,
-      tipo,
-      monto: Number(form.monto),
-      cuentaId: form.cuentaId,
-      cuentaDestinoId: tipo === 'transferencia' ? form.cuentaDestinoId : null,
-      categoriaId: tipo === 'transferencia' ? null : form.categoriaId,
-      descripcion: form.descripcion.trim(),
-      fecha: new Date(form.fecha + 'T12:00:00').toISOString(),
-      notas: form.notas,
-      moneda: cuentaOrigen?.moneda || 'ARS',
-    };
-
     dispatch({
-      type: transaccion ? 'EDITAR_TRANSACCION' : 'AGREGAR_TRANSACCION',
-      payload,
+      type: 'AGREGAR_TRANSACCION',
+      payload: {
+        tipo,
+        monto: Number(form.monto),
+        cuentaId: form.cuentaId,
+        cuentaDestinoId: tipo === 'transferencia' ? form.cuentaDestinoId : null,
+        categoriaId: tipo === 'transferencia' ? null : form.categoriaId,
+        descripcion: form.descripcion.trim(),
+        fecha: new Date(form.fecha + 'T12:00:00').toISOString(),
+        notas: form.notas,
+        moneda: cuentaOrigen?.moneda || 'ARS',
+      },
     });
     onClose();
   };
 
   const TIPOS = [
-    { key: 'gasto', label: 'Gasto', icon: ArrowDownCircle, color: 'var(--accent-red)' },
-    { key: 'ingreso', label: 'Ingreso', icon: ArrowUpCircle, color: 'var(--accent-green)' },
-    { key: 'transferencia', label: 'Transferencia', icon: ArrowLeftRight, color: 'var(--accent-blue)' },
+    { key: 'gasto',         label: 'Gasto',         icon: ArrowDownCircle,  color: 'var(--accent-red)' },
+    { key: 'ingreso',       label: 'Ingreso',        icon: ArrowUpCircle,    color: 'var(--accent-green)' },
+    { key: 'transferencia', label: 'Transferencia',  icon: ArrowLeftRight,   color: 'var(--accent-blue)' },
   ];
+
+  const colorActivo = TIPOS.find(t => t.key === tipo)?.color || 'var(--accent-purple)';
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2 className="modal-title">{transaccion ? 'Editar Transacción' : 'Nueva Transacción'}</h2>
-          <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose}><X size={18} /></button>
+        {/* Handle bar estilo iOS */}
+        <div style={{
+          width: 40, height: 4, borderRadius: 4,
+          background: 'var(--border)',
+          margin: '0 auto 1.25rem',
+        }} />
+
+        <div className="modal-header" style={{ marginBottom: '1rem' }}>
+          <h2 className="modal-title">Nueva Transacción</h2>
+          <button className="btn btn-ghost btn-icon" onClick={onClose} style={{ minHeight: 44, minWidth: 44 }}>
+            <X size={20} />
+          </button>
         </div>
 
-        {/* Selector de tipo */}
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem' }}>
+        {/* Selector de tipo — grid 3 cols siempre */}
+        <div className="tipo-selector" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginBottom: '1.25rem' }}>
           {TIPOS.map(({ key, label, icon: Icon, color }) => (
             <button
               key={key}
               type="button"
               onClick={() => setTipo(key)}
-              className={`btn btn-sm flex-1 ${tipo === key ? '' : 'btn-ghost'}`}
-              style={tipo === key ? {
-                background: color + '22',
-                color,
-                border: `1.5px solid ${color}`,
-              } : {}}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.3rem',
+                padding: '0.75rem 0.5rem',
+                borderRadius: '12px',
+                border: tipo === key ? `2px solid ${color}` : '2px solid var(--border)',
+                background: tipo === key ? (color + '18') : 'var(--bg-input)',
+                color: tipo === key ? color : 'var(--text-muted)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                fontFamily: 'inherit',
+                fontWeight: 700,
+                fontSize: '0.75rem',
+                minHeight: 72,
+              }}
             >
-              <Icon size={15} /> <span style={{ display: 'inline' }}>{label}</span>
+              <Icon size={22} />
+              {label}
             </button>
           ))}
         </div>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', overflowY: 'auto', maxHeight: 'calc(80vh - 120px)' }}>
-          {/* Monto */}
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+          {/* Monto — prominente */}
           <div className="input-group">
             <label className="input-label">Monto</label>
-            <input
-              className={`input ${errors.monto ? 'input-error' : ''}`}
-              type="number"
-              step="0.01"
-              value={form.monto}
-              onChange={e => set('monto', e.target.value)}
-              placeholder="0.00"
-              style={{ fontSize: '1.25rem', fontWeight: 700 }}
-              autoFocus
-            />
+            <div style={{ position: 'relative' }}>
+              <span style={{
+                position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)',
+                color: colorActivo, fontWeight: 800, fontSize: '1.1rem',
+              }}>$</span>
+              <input
+                className={`input ${errors.monto ? 'input-error' : ''}`}
+                type="number"
+                inputMode="decimal"
+                step="0.01"
+                value={form.monto}
+                onChange={e => set('monto', e.target.value)}
+                placeholder="0.00"
+                style={{ fontSize: '1.4rem', fontWeight: 800, paddingLeft: '1.75rem', height: '3.25rem', color: colorActivo }}
+                autoFocus
+              />
+            </div>
             {errors.monto && <span className="input-error-msg">{errors.monto}</span>}
           </div>
 
           {/* Descripción */}
           <div className="input-group">
-            <label className="input-label">Descripción</label>
+            <label className="input-label">¿Qué fue?</label>
             <input
               className={`input ${errors.descripcion ? 'input-error' : ''}`}
               value={form.descripcion}
               onChange={e => set('descripcion', e.target.value)}
-              placeholder="¿En qué gastaste / de dónde ingresó?"
+              placeholder={tipo === 'ingreso' ? 'Ej: Sueldo, Freelance...' : tipo === 'transferencia' ? 'Ej: Retiro efectivo...' : 'Ej: Supermercado, Taxi...'}
+              style={{ fontSize: '1rem' }}
             />
             {errors.descripcion && <span className="input-error-msg">{errors.descripcion}</span>}
           </div>
 
-          <div className="grid-2">
-            {/* Cuenta origen */}
+          {/* Cuenta origen */}
+          <div className="input-group">
+            <label className="input-label">{tipo === 'transferencia' ? 'Cuenta Origen' : 'Cuenta'}</label>
+            <select
+              className={`input ${errors.cuentaId ? 'input-error' : ''}`}
+              value={form.cuentaId}
+              onChange={e => set('cuentaId', e.target.value)}
+            >
+              <option value="">Seleccionar cuenta...</option>
+              {cuentas.map(c => (
+                <option key={c.id} value={c.id}>{c.nombre} ({c.moneda})</option>
+              ))}
+            </select>
+            {errors.cuentaId && <span className="input-error-msg">{errors.cuentaId}</span>}
+          </div>
+
+          {/* Categoría o cuenta destino */}
+          {tipo === 'transferencia' ? (
             <div className="input-group">
-              <label className="input-label">{tipo === 'transferencia' ? 'Cuenta Origen' : 'Cuenta'}</label>
+              <label className="input-label">Cuenta Destino</label>
               <select
-                className={`input ${errors.cuentaId ? 'input-error' : ''}`}
-                value={form.cuentaId}
-                onChange={e => set('cuentaId', e.target.value)}
+                className={`input ${errors.cuentaDestinoId ? 'input-error' : ''}`}
+                value={form.cuentaDestinoId}
+                onChange={e => set('cuentaDestinoId', e.target.value)}
               >
-                <option value="">Seleccionar...</option>
-                {cuentas.map(c => (
+                <option value="">Seleccionar cuenta...</option>
+                {cuentas.filter(c => c.id !== form.cuentaId).map(c => (
                   <option key={c.id} value={c.id}>{c.nombre} ({c.moneda})</option>
                 ))}
               </select>
-              {errors.cuentaId && <span className="input-error-msg">{errors.cuentaId}</span>}
+              {errors.cuentaDestinoId && <span className="input-error-msg">{errors.cuentaDestinoId}</span>}
             </div>
-
-            {/* Categoría o cuenta destino */}
-            {tipo === 'transferencia' ? (
-              <div className="input-group">
-                <label className="input-label">Cuenta Destino</label>
-                <select
-                  className={`input ${errors.cuentaDestinoId ? 'input-error' : ''}`}
-                  value={form.cuentaDestinoId}
-                  onChange={e => set('cuentaDestinoId', e.target.value)}
-                >
-                  <option value="">Seleccionar...</option>
-                  {cuentas.filter(c => c.id !== form.cuentaId).map(c => (
-                    <option key={c.id} value={c.id}>{c.nombre} ({c.moneda})</option>
-                  ))}
-                </select>
-                {errors.cuentaDestinoId && <span className="input-error-msg">{errors.cuentaDestinoId}</span>}
-              </div>
-            ) : (
-              <div className="input-group">
-                <label className="input-label">Categoría</label>
-                <select
-                  className={`input ${errors.categoriaId ? 'input-error' : ''}`}
-                  value={form.categoriaId}
-                  onChange={e => set('categoriaId', e.target.value)}
-                >
-                  <option value="">Seleccionar...</option>
-                  {categoriasFiltradas.map(c => (
-                    <option key={c.id} value={c.id}>{c.nombre}</option>
-                  ))}
-                </select>
-                {errors.categoriaId && <span className="input-error-msg">{errors.categoriaId}</span>}
-              </div>
-            )}
-          </div>
+          ) : (
+            <div className="input-group">
+              <label className="input-label">Categoría</label>
+              <select
+                className={`input ${errors.categoriaId ? 'input-error' : ''}`}
+                value={form.categoriaId}
+                onChange={e => set('categoriaId', e.target.value)}
+              >
+                <option value="">Seleccionar categoría...</option>
+                {categoriasFiltradas.map(c => (
+                  <option key={c.id} value={c.id}>{c.nombre}</option>
+                ))}
+              </select>
+              {errors.categoriaId && <span className="input-error-msg">{errors.categoriaId}</span>}
+            </div>
+          )}
 
           {/* Fecha */}
           <div className="input-group">
@@ -195,27 +220,37 @@ export default function ModalTransaccion({ onClose, cuentaPreseleccionada = null
               className="input"
               value={form.notas}
               onChange={e => set('notas', e.target.value)}
-              placeholder="Notas adicionales..."
+              placeholder="Nota adicional..."
             />
           </div>
 
-          <div className="modal-footer">
-            <button type="button" className="btn btn-ghost" onClick={onClose}>Cancelar</button>
-            <button
-              type="submit"
-              className="btn"
-              style={{
-                background: tipo === 'ingreso'
-                  ? 'linear-gradient(135deg, var(--accent-green), var(--accent-green-light))'
-                  : tipo === 'transferencia'
-                    ? 'linear-gradient(135deg, var(--accent-blue), #6c5ce7)'
-                    : 'linear-gradient(135deg, var(--accent-red), var(--accent-orange))',
-                color: 'white',
-              }}
-            >
-              {transaccion ? 'Guardar cambios' : `Registrar ${tipo === 'ingreso' ? 'Ingreso' : tipo === 'transferencia' ? 'Transferencia' : 'Gasto'}`} 
-            </button>
-          </div>
+          {/* Botón submit grande */}
+          <button
+            type="submit"
+            style={{
+              marginTop: '0.25rem',
+              padding: '1rem',
+              borderRadius: '14px',
+              fontSize: '1rem',
+              fontWeight: 800,
+              border: 'none',
+              cursor: 'pointer',
+              color: 'white',
+              background: tipo === 'ingreso'
+                ? 'linear-gradient(135deg, var(--accent-green), var(--accent-green-light))'
+                : tipo === 'transferencia'
+                  ? 'linear-gradient(135deg, var(--accent-blue), #6c5ce7)'
+                  : 'linear-gradient(135deg, var(--accent-red), var(--accent-orange))',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+              transition: 'transform 0.15s ease',
+              fontFamily: 'inherit',
+              letterSpacing: '-0.3px',
+            }}
+            onMouseDown={e => e.currentTarget.style.transform = 'scale(0.98)'}
+            onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            Registrar {tipo === 'ingreso' ? 'Ingreso ✅' : tipo === 'transferencia' ? 'Transferencia 🔄' : 'Gasto ❌'}
+          </button>
         </form>
       </div>
     </div>
